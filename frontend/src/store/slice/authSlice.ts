@@ -1,10 +1,13 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import LocalStorage from "../../utils/LocalStorage";
 
-
 interface AuthState {
   token?: string | null;
-  user?: any | null;
+  user?: {
+    userId?: string;
+    fullName?: string;
+    profileImage?: string;
+  } | null;
 }
 
 const initialState: AuthState = {
@@ -24,8 +27,12 @@ const authSlice = createSlice({
     setUser: (
       _state,
       action: PayloadAction<{
-        accessToken?: any;
-        user?: any;
+        accessToken?: string;
+        user?: {
+          userId?: string;
+          fullName?: string;
+          profileImage?: string;
+        };
       }>
     ) => {
       LocalStorage.setInLocalStorage("accessToken", action.payload.accessToken);

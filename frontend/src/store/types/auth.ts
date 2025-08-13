@@ -36,6 +36,7 @@ export interface UserData {
  * API Response Structure
  */
 export interface ApiResponse<T> {
+  token: string | undefined;
   isSuccess: boolean;
   data: T;
 }

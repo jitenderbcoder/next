@@ -1,6 +1,6 @@
 const Constants = {
-  HOST: import.meta.env.VITE_BASE_URL,
+  HOST: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
   API_VERSION: "api/",
-  UPLOAD_URL: import.meta.env.VITE_BASE_URL + "api/images/upload",
+  UPLOAD_URL: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID + "api/images/upload",
 };
 export default Constants;

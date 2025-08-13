@@ -9,6 +9,7 @@ const Endpoints = {
   RESET: "auths/resetPassword",
   CHANGE_PASSWORD: "auths/updatePassword",
   UPLOAD_IMAGES: "images/upload",
-  SOCIAL_AUTH: "auths/socialLogin",
+  // SOCIAL_AUTH: "auths/socialLogin",
+  SOCIAL_AUTH: 'auth/google',
 };
 export default Endpoints;
