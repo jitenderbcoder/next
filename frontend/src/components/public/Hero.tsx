@@ -1,11 +1,11 @@
 export default function Hero() {
     return (
-        <section className="relative bg-gradient-to-br from-gray-900 to-gray-800 overflow-hidden py-24 md:py-32">
-            <div className="absolute inset-0 opacity-20">
+        <section className="dark:bg-black dark:border-white/[0.2] bg-white relative  overflow-hidden py-24 md:py-32">
+            {/* <div className="absolute inset-0 opacity-20">
                 <div className="absolute top-0 left-20 w-72 h-72 bg-purple-600 rounded-full mix-blend-multiply filter blur-3xl opacity-70"></div>
                 <div className="absolute top-0 right-20 w-72 h-72 bg-blue-600 rounded-full mix-blend-multiply filter blur-3xl opacity-70"></div>
                 <div className="absolute bottom-20 left-1/2 w-72 h-72 bg-indigo-600 rounded-full mix-blend-multiply filter blur-3xl opacity-70"></div>
-            </div>
+            </div> */}
 
             <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                 <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-6">
