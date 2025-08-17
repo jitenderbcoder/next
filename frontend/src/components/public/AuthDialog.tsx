@@ -10,10 +10,40 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Icons } from "../ui/icons";
+import { useGoogleLogin } from "@react-oauth/google";
+import { useGoogleAuthMutation } from "@/store/services/authService";
 
 export function AuthDialog() {
   const [isOpen, setIsOpen] = useState(false);
+  const [user, setUser] = useState(null);
+  const [googleAuth] = useGoogleAuthMutation();
 
+  // const navigate = useNavigate();
+  const responseGoogle = async (authResult: any) => {
+    try {
+      // debugger
+      if (authResult["code"]) {
+        console.log(authResult.code, ":>authResult.code90inn")
+        const result = await googleAuth({ code: authResult.code });
+        const { email, name, image } = result.data.user;
+        const token = result.data.token;
+        const obj = { email, name, token, image };
+        localStorage.setItem('user-info', JSON.stringify(obj));
+        // navigate('/dashboard');
+      } else {
+        console.log(authResult);
+        throw new Error(authResult);
+      }
+    } catch (e) {
+      console.log('Error while Google Login...', e);
+    }
+  };
+
+  const googleLogin = useGoogleLogin({
+    onSuccess: responseGoogle,
+    onError: responseGoogle,
+    flow: "auth-code",
+  });
   return (
     <>
       <Link
@@ -37,7 +67,7 @@ export function AuthDialog() {
 
           <div className="grid gap-4 py-4">
             <div className="text-center mb-4">
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-muted-foreground" >
                 Continue with Google to access all features
               </p>
             </div>
@@ -45,10 +75,7 @@ export function AuthDialog() {
             <Button
               variant="outline"
               className="w-full py-6 flex items-center justify-center gap-2"
-              onClick={() => {
-                // Add your Google auth logic here
-                console.log("Google sign in clicked");
-              }}
+              onClick={googleLogin}
             >
               <Icons.google className="h-5 w-5" />
               <span>Continue with Google</span>

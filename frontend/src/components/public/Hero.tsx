@@ -59,7 +59,7 @@ export default function Hero() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2, duration: 0.8 }}
               >
-                Code Blog
+                Coderschain
               </motion.span>
               <motion.span
                 className="block text-gray-800 dark:text-white mt-4 text-3xl md:text-7xl"

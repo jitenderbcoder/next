@@ -19,6 +19,26 @@ const onLoginStarted = async (_: any, { dispatch, queryFulfilled }: any) => {
     // console.error("Error", _error);
   }
 };
+const onGoogleAuthStarted = async (
+  _: any,
+  { dispatch, queryFulfilled }: any
+) => {
+  try {
+    const { data } = await queryFulfilled;
+    if (data?.isEmailVerified) {
+      dispatch(setToken(data.session.accessToken));
+      dispatch(
+        setUser({
+          accessToken: data?.session?.accessToken,
+          user: data,
+        })
+      );
+    }
+  } catch (error) {
+    console.error("Google authentication error:", error);
+  }
+};
+
 export const authApi = GenericApi.injectEndpoints({
   endpoints: (builder) => ({
     socialLogin: builder.mutation({
@@ -40,8 +60,15 @@ export const authApi = GenericApi.injectEndpoints({
       }),
       keepUnusedDataFor: 0,
     }),
+    googleAuth: builder.mutation<any, { code: string }>({
+      query: ({ code }) => ({
+        url: `/auth/google?code=${code}`,
+        method: "GET",
+      }),
+      onQueryStarted: onGoogleAuthStarted,
+    }),
   }),
   overrideExisting: true,
 });
 
-export const { useSocialLoginMutation, useGetGoogleUserInfoQuery } = authApi;
+export const { useSocialLoginMutation, useGetGoogleUserInfoQuery, useGoogleAuthMutation } = authApi;
