@@ -1,5 +1,5 @@
 import CTA from "@/components/public/CTA";
-import Features from "@/components/public/Features";
+import BlogListing from "@/components/public/BlogListing";
 import Hero from "@/components/public/Hero";
 import Pricing from "@/components/public/Pricing";
 import Testimonials from "@/components/public/Testimonials";
@@ -9,10 +9,10 @@ export default function Home() {
     return (
         <>
             <Hero />
-            <Features />
+            <BlogListing />
             <Testimonials />
-            <Pricing />
-            <CTA />
+            {/* <Pricing /> */}
+            {/* <CTA /> */}
         </>
     );
 }
