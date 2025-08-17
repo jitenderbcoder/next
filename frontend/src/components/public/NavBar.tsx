@@ -5,9 +5,9 @@ import { cn } from "@/lib/utils";
 import { LogOut, MenuIcon, Moon, Settings, Sun, User, X } from "lucide-react"; // Assuming you're using lucide-react for icons
 import Image from "next/image"; // For logo image (optional)
 import Link from "next/link";
-import { ModeToggle } from "../ui/ModeToggle";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { AnimatedThemeToggler } from "../magicui/animated-theme-toggler";
+import { AuthDialog } from "./AuthDialog";
 
 export default function Navbar() {
     return (
@@ -95,38 +95,37 @@ function NavbarUi({ className }: { className?: string }) {
                     className
                 )}
             >
-
-                {/* Logo on the left */}
-                <div className="md:hidden flex items-center">
-                    <Link href="/" className="text-xl font-bold text-gray-900 dark:text-white">
-                        MyApp
-                    </Link>
-                    {/* Option for image-based logo */}
-                    {/* 
-        <Link href="/">
-          <Image
-            src="/logo.png"
-            alt="Logo"
-            width={40}
-            height={40}
-            className="object-contain"
-          />
-        </Link>
-        */}
+                <div className="md:hidden flex justify-between w-full pr-2 rounded-full border dark:bg-gray-950/50 dark:border-white bg-[#f7f4ed]/60 backdrop-blur-md shadow-2xs">
+                    {/* Logo on the left */}
+                    <div className="flex items-center">
+                        <Link href="/">
+                            <Image
+                                src="/logo.jpg"
+                                alt="Logo"
+                                width={70}
+                                height={70}
+                                className="object-contain rounded-full"
+                            />
+                        </Link>
+                    </div>
+                    <div className="flex items-center space-x-4 w-full justify-end">
+                        <AnimatedThemeToggler />
+                        {/* <AuthDialog /> */}
+                        <ProfileDropdown />
+                    </div>
+                    {/* Hamburger Menu Icon (visible on mobile) */}
+                    <button
+                        className="md:hidden p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                        onClick={toggleMobileMenu}
+                        aria-label="Toggle mobile menu"
+                    >
+                        {isMobileMenuOpen ? (
+                            <X className="w-6 h-6 text-gray-700 dark:text-gray-200" />
+                        ) : (
+                            <MenuIcon className="w-6 h-6 text-gray-700 dark:text-gray-200" />
+                        )}
+                    </button>
                 </div>
-
-                {/* Hamburger Menu Icon (visible on mobile) */}
-                <button
-                    className="md:hidden p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-                    onClick={toggleMobileMenu}
-                    aria-label="Toggle mobile menu"
-                >
-                    {isMobileMenuOpen ? (
-                        <X className="w-6 h-6 text-gray-700 dark:text-gray-200" />
-                    ) : (
-                        <MenuIcon className="w-6 h-6 text-gray-700 dark:text-gray-200" />
-                    )}
-                </button>
 
                 <Menu setActive={setActive}>
                     {/* Logo on the left */}
@@ -135,8 +134,8 @@ function NavbarUi({ className }: { className?: string }) {
                             <Image
                                 src="/logo.jpg"
                                 alt="Logo"
-                                width={80}
-                                height={80}
+                                width={70}
+                                height={70}
                                 className="object-contain rounded-full"
                             />
                         </Link>
@@ -192,39 +191,21 @@ function NavbarUi({ className }: { className?: string }) {
 
                     {/* Right Side: Dark/Light Toggle, Sign In/Sign Up, Avatar */}
                     <div className="flex items-center space-x-4 w-full justify-end">
-                        {/* Dark/Light Mode Toggle */}
-                        {/* <ModeToggle /> */}
                         <AnimatedThemeToggler />
-
-                        {/* Sign In / Sign Up Buttons */}
-                        <Link
-                            href="/signin"
-                            className="text-sm font-medium text-gray-700 dark:text-gray-200 hover:underline"
-                        >
-                            Sign In
-                        </Link>
-                        <Link
-                            href="/signup"
-                            className="text-sm font-medium text-white bg-blue-600 px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
-                        >
-                            Sign Up
-                        </Link>
-
-                        {/* Avatar Profile */}
+                        <AuthDialog />
                         <ProfileDropdown />
                     </div>
                 </Menu>
-
-
             </div>
+
             {/* Mobile Menu (slides in from right) */}
             <div
                 className={cn(
-                    "fixed inset-y-0 right-0 w-full overflow-scroll bg-white dark:bg-gray-800 shadow-lg transform transition-transform duration-300 ease-in-out z-50 md:hidden",
+                    "h-screen overflow-hidden fixed inset-y-0 right-0 w-full bg-white dark:bg-gray-800 shadow-lg transform transition-transform duration-300 ease-in-out z-50 md:hidden",
                     isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
                 )}
             >
-                <div className="flex flex-col h-full p-4">
+                <div className="flex flex-col p-4">
                     {/* Close Button */}
                     <button
                         className="self-end p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
@@ -236,7 +217,7 @@ function NavbarUi({ className }: { className?: string }) {
 
                     {/* Mobile Menu Items */}
                     <div className="flex flex-col space-y-4 mt-4">
-                        <div className="flex flex-col space-y-2">
+                        {/* <div className="flex flex-col space-y-2">
                             <span className="text-lg font-semibold text-gray-900 dark:text-white">Services</span>
                             <HoveredLink href="/web-dev" className="text-sm text-gray-700 dark:text-gray-200">
                                 Web Development
@@ -253,36 +234,6 @@ function NavbarUi({ className }: { className?: string }) {
                         </div>
 
                         <div className="flex flex-col space-y-2">
-                            <span className="text-lg font-semibold text-gray-900 dark:text-white">Products</span>
-                            <div className="flex flex-col space-y-2">
-                                <ProductItem
-                                    title="Algochurn"
-                                    href="https://algochurn.com"
-                                    src="https://assets.aceternity.com/demos/algochurn.webp"
-                                    description="Prepare for tech interviews like never before."
-                                />
-                                <ProductItem
-                                    title="Tailwind Master Kit"
-                                    href="https://tailwindmasterkit.com"
-                                    src="https://assets.aceternity.com/demos/tailwindmasterkit.webp"
-                                    description="Production ready Tailwind css components."
-                                />
-                                <ProductItem
-                                    title="Moonbeam"
-                                    href="https://gomoonbeam.com"
-                                    src="https://assets.aceternity.com/demos/Screenshot+2024-02-21+at+11.51.31%E2%80%AFPM.png"
-                                    description="Go from idea to blog in minutes."
-                                />
-                                <ProductItem
-                                    title="Rogue"
-                                    href="https://userogue.com"
-                                    src="https://assets.aceternity.com/demos/Screenshot+2024-02-21+at+11.47.07%E2%80%AFPM.png"
-                                    description="Respond to government RFPs 10x faster using AI."
-                                />
-                            </div>
-                        </div>
-
-                        <div className="flex flex-col space-y-2">
                             <span className="text-lg font-semibold text-gray-900 dark:text-white">Pricing</span>
                             <HoveredLink href="/hobby" className="text-sm text-gray-700 dark:text-gray-200">
                                 Hobby
@@ -296,28 +247,9 @@ function NavbarUi({ className }: { className?: string }) {
                             <HoveredLink href="/enterprise" className="text-sm text-gray-700 dark:text-gray-200">
                                 Enterprise
                             </HoveredLink>
-                        </div>
-                    </div>
-
-                    {/* Mobile Right Side: Dark/Light Toggle, Sign In/Sign Up, Avatar */}
-                    <div className="mt-auto flex flex-col space-y-4">
-                        <ModeToggle />
-                        <Link
-                            href="/signin"
-                            className="text-sm font-medium text-gray-700 dark:text-gray-200 hover:underline"
-                            onClick={toggleMobileMenu}
-                        >
-                            Sign In
-                        </Link>
-                        <Link
-                            href="/signup"
-                            className="text-sm font-medium text-white bg-blue-600 px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
-                            onClick={toggleMobileMenu}
-                        >
-                            Sign Up
-                        </Link>
+                        </div> */}
+                        <AuthDialog />
                         <ProfileDropdown />
-
                     </div>
                 </div>
             </div>

@@ -1,9 +1,9 @@
 "use client"
 import { motion } from "framer-motion";
 import { useState } from "react";
-
+import { Variants } from "framer-motion";
 // Animation variants
-const container = {
+const container: Variants = {
   hidden: { opacity: 0 },
   show: {
     opacity: 1,
@@ -14,7 +14,7 @@ const container = {
   }
 };
 
-const item = {
+const item: Variants = {
   hidden: { y: 20, opacity: 0 },
   show: {
     y: 0,
@@ -26,9 +26,9 @@ const item = {
   }
 };
 
-const trendingItem = {
+const trendingItem: Variants = {
   hidden: { y: 30, opacity: 0 },
-  show: (i) => ({
+  show: (i: any) => ({
     y: 0,
     opacity: 1,
     transition: {
@@ -53,7 +53,7 @@ export default function Hero() {
           {/* Main heading */}
           <motion.div variants={item}>
             <h1 className="font-extrabold tracking-tight mb-2">
-              <motion.span 
+              <motion.span
                 className="text-3xl md:text-7xl  text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-600 dark:from-blue-400 dark:to-purple-300"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -61,7 +61,7 @@ export default function Hero() {
               >
                 Code Blog
               </motion.span>
-              <motion.span 
+              <motion.span
                 className="block text-gray-800 dark:text-white mt-4 text-3xl md:text-7xl"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -73,7 +73,7 @@ export default function Hero() {
           </motion.div>
 
           {/* Subheading */}
-          <motion.p 
+          <motion.p
             className="mt-6 max-w-2xl mx-auto text-xl md:text-2xl text-gray-600 dark:text-gray-300"
             variants={item}
           >
@@ -81,7 +81,7 @@ export default function Hero() {
           </motion.p>
 
           {/* Search bar */}
-          <motion.div 
+          <motion.div
             className="mt-10 max-w-2xl mx-auto"
             variants={item}
           >
@@ -92,15 +92,15 @@ export default function Hero() {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search articles, tutorials..."
                 className="w-full px-6 py-4 rounded-lg bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 shadow-sm"
-                whileFocus={{ 
+                whileFocus={{
                   scale: 1.02,
                   boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1)"
                 }}
                 transition={{ type: "spring", stiffness: 400, damping: 20 }}
               />
-              <motion.button 
+              <motion.button
                 className="absolute right-2 top-1/2 -translate-y-1/2 px-4 py-2 rounded-md bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-medium"
-                whileHover={{ 
+                whileHover={{
                   scale: 1.05,
                   background: "linear-gradient(to right, #2563eb, #7c3aed)"
                 }}
@@ -112,7 +112,7 @@ export default function Hero() {
           </motion.div>
 
           {/* Categories */}
-          <motion.div 
+          <motion.div
             className="mt-8 flex flex-wrap justify-center gap-2"
             variants={container}
           >
@@ -121,7 +121,7 @@ export default function Hero() {
                 key={category}
                 className="px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300"
                 variants={item}
-                whileHover={{ 
+                whileHover={{
                   y: -3,
                   scale: 1.05,
                   boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)"
@@ -134,13 +134,13 @@ export default function Hero() {
         </motion.div>
 
         {/* Trending articles */}
-        <motion.div 
+        <motion.div
           className="mt-16 max-w-5xl mx-auto"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8 }}
         >
-          <motion.h3 
+          <motion.h3
             className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4"
             initial={{ y: 10, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -148,8 +148,8 @@ export default function Hero() {
           >
             Trending Now
           </motion.h3>
-          
-          <motion.div 
+
+          <motion.div
             className="grid grid-cols-1 md:grid-cols-3 gap-4"
             variants={container}
             initial="hidden"
@@ -177,7 +177,7 @@ export default function Hero() {
                 custom={index}
                 variants={trendingItem}
                 className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-all duration-300 cursor-pointer"
-                whileHover={{ 
+                whileHover={{
                   y: -5,
                   boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)"
                 }}
@@ -204,14 +204,14 @@ export default function Hero() {
       </div>
 
       {/* Scroll indicator */}
-      <motion.div 
+      <motion.div
         className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
-        animate={{ 
+        animate={{
           y: [0, 10, 0],
           opacity: [0.6, 1, 0.6]
         }}
-        transition={{ 
-          repeat: Infinity, 
+        transition={{
+          repeat: Infinity,
           duration: 2,
           ease: "easeInOut"
         }}
@@ -220,6 +220,7 @@ export default function Hero() {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
         </svg>
       </motion.div>
+
     </section>
   );
 }
