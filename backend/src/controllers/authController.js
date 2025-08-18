@@ -49,12 +49,13 @@ import User from "../models/User.js";
 
 /* GET Google Authentication API with access_token. */
 export const googleAuth = async (req, res, next) => {
-  const access_token = req.query.access_token;  // Or req.body.access_token if using POST
+  const access_token = req.query.access_token; // Or req.body.access_token if using POST
   try {
     const userRes = await axios.get(
       `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${access_token}`
     );
     const { email, name, picture, id } = userRes.data;
+    console.log(userRes.data, ":>>>>>>>>>>>>>>");
     let user = await User.findOne({ email });
 
     if (!user) {
@@ -75,10 +76,10 @@ export const googleAuth = async (req, res, next) => {
       user,
     });
   } catch (err) {
-    console.log(err, ":>err>>>>>>>>>>>>>>>>>>>");  // Keep this uncommented for debugging
+    console.log(err, ":>err>>>>>>>>>>>>>>>>>>>"); // Keep this uncommented for debugging
     res.status(500).json({
       message: "Internal Server Error",
-      error: err.message || err.error,  // Improved to capture error details
+      error: err.message || err.error, // Improved to capture error details
     });
   }
 };

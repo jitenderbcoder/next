@@ -1,36 +1,20 @@
 import { GenericApi } from "../../api/genricApi";
 import Endpoints from "../../constants/Endpoints";
-import { setToken, setUser } from "../slice/authSlice";
-import { LoginResponse } from "../types/auth";
+import { setLogout, setToken, setUser } from "../slice/authSlice";
 
-const onLoginStarted = async (_: any, { dispatch, queryFulfilled }: any) => {
-  try {
-    const { data } = await queryFulfilled;
-    if (data?.data?.isEmailVerified) {
-      dispatch(setToken(data.data.session.accessToken));
-      dispatch(
-        setUser({
-          accessToken: data.data?.session?.accessToken,
-          user: data.data,
-        })
-      );
-    }
-  } catch (_error) {
-    // console.error("Error", _error);
-  }
-};
 const onGoogleAuthStarted = async (
   _: any,
   { dispatch, queryFulfilled }: any
 ) => {
   try {
     const { data } = await queryFulfilled;
-    if (data?.isEmailVerified) {
-      dispatch(setToken(data.session.accessToken));
+    console.log(data, ":>data9ioji9j");
+    if (data) {
+      dispatch(setToken(data.token));
       dispatch(
         setUser({
-          accessToken: data?.session?.accessToken,
-          user: data,
+          accessToken: data?.token,
+          user: data.user,
         })
       );
     }
@@ -41,25 +25,6 @@ const onGoogleAuthStarted = async (
 
 export const authApi = GenericApi.injectEndpoints({
   endpoints: (builder) => ({
-    socialLogin: builder.mutation({
-      query: (values) => {
-        return {
-          url: Endpoints.SOCIAL_AUTH,
-          method: "POST",
-          body: values,
-        };
-      },
-      onQueryStarted: onLoginStarted,
-    }),
-    getGoogleUserInfo: builder.query<any, string>({
-      query: (accessToken) => ({
-        url: "https://www.googleapis.com/oauth2/v3/userinfo",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }),
-      keepUnusedDataFor: 0,
-    }),
     googleAuth: builder.mutation<any, { access_token: string }>({
       query: ({ access_token }) => ({
         url: `/auth/google?access_token=${access_token}`,
@@ -67,12 +32,23 @@ export const authApi = GenericApi.injectEndpoints({
       }),
       onQueryStarted: onGoogleAuthStarted,
     }),
+    logout: builder.mutation({
+      query: (id) => ({
+        url: `auths/logout/${id}`,
+        method: "PUT",
+      }),
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          dispatch(setLogout());
+          setTimeout(() => {
+            dispatch(GenericApi.util.resetApiState());
+          }, 1000);
+        } catch (error) {}
+      },
+    }),
   }),
   overrideExisting: true,
 });
 
-export const {
-  useSocialLoginMutation,
-  useGetGoogleUserInfoQuery,
-  useGoogleAuthMutation,
-} = authApi;
+export const { useGoogleAuthMutation, useLogoutMutation } = authApi;

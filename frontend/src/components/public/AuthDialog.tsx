@@ -12,50 +12,26 @@ import { Button } from "@/components/ui/button";
 import { Icons } from "../ui/icons";
 import { useGoogleLogin } from "@react-oauth/google";
 import { useGoogleAuthMutation } from "@/store/services/authService";
+import { useRouter } from "next/navigation";
 
 export function AuthDialog() {
   const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useState(null);
   const [googleAuth] = useGoogleAuthMutation();
+  const router = useRouter();
 
-  // const navigate = useNavigate();
-  // const responseGoogle = async (authResult: any) => {
-  //   try {
-  //     // debugger
-  //     if (authResult["code"]) {
-  //       console.log(authResult.code, ":>authResult.code90inn")
-  //       const result = await googleAuth({ code: authResult.code }).unwrap();
-
-  //      const { email, fullName: name, profileImage: image } = result.data.user;
-  //       const token = result.data.token;
-  //       const obj = { email, name, token, image };
-  //       localStorage.setItem('user-info', JSON.stringify(obj));
-  //       // navigate('/dashboard');
-  //     } else {
-  //       console.log(authResult);
-  //       throw new Error(authResult);
-  //     }
-  //   } catch (e) {
-  //     console.log('Error while Google Login...', e);
-  //   }
-  // };
-
-  // const googleLogin = useGoogleLogin({
-  //   onSuccess: responseGoogle,
-  //   onError: responseGoogle,
-  //   flow: "auth-code",
-  // });
   const responseGoogle = async (authResult: any) => {
     try {
       if (authResult.access_token) {
-        console.log(authResult.access_token, ":>access_token");
         const result = await googleAuth({ access_token: authResult.access_token }).unwrap();
-
-        const { email, name, image } = result.data.user;
-        const token = result.data.token;
-        const obj = { email, name, token, image };
-        localStorage.setItem('user-info', JSON.stringify(obj));
-        // navigate('/dashboard');
+        
+        console.log(result, ":>access_token");
+        // debugger
+        // const { email, name, image } = result.user;
+        // const token = result.data.token;
+        // const obj = { email, name, token, image };
+        // localStorage.setItem('user-info', JSON.stringify(obj));
+        setIsOpen(false)
       } else {
         console.log(authResult);
         throw new Error(authResult);
@@ -68,7 +44,7 @@ export function AuthDialog() {
   const googleLogin = useGoogleLogin({
     onSuccess: responseGoogle,
     onError: responseGoogle,
-    scope: "email profile",  // Add scopes for userinfo access
+    scope: "email profile",
   });
   return (
     <>

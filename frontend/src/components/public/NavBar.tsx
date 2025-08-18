@@ -8,6 +8,9 @@ import Link from "next/link";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { AnimatedThemeToggler } from "../magicui/animated-theme-toggler";
 import { AuthDialog } from "./AuthDialog";
+import { useSelector } from "react-redux";
+import { StoreModel } from "@/store/store";
+import { useLogoutMutation } from "@/store/services/authService";
 
 export default function Navbar() {
     return (
@@ -20,6 +23,10 @@ export default function Navbar() {
 function NavbarUi({ className }: { className?: string }) {
     const [active, setActive] = useState<string | null>(null);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const user = useSelector((state: StoreModel) => state.auth.user);
+    const [logout, { isLoading: isLoggingOut }] = useLogoutMutation();
+
+    console.log(user, ":>user98uihjb")
     // Dropdown menu component for both desktop and mobile
     const ProfileDropdown = ({ isMobile = false }: { isMobile?: boolean }) => (
         <DropdownMenu>
@@ -71,14 +78,15 @@ function NavbarUi({ className }: { className?: string }) {
                     </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                    <Link
-                        href="/logout"
+                    <div
+                        // href="/logout"
                         className="flex items-center space-x-2"
-                        onClick={isMobile ? toggleMobileMenu : undefined}
+                        // onClick={isMobile ? toggleMobileMenu : undefined}
+                        onClick={() => logout(user?._id)}
                     >
                         <LogOut className="w-4 h-4" />
                         <span>Logout</span>
-                    </Link>
+                    </div>
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
@@ -110,8 +118,12 @@ function NavbarUi({ className }: { className?: string }) {
                     </div>
                     <div className="flex items-center space-x-4 w-full justify-end">
                         <AnimatedThemeToggler />
-                        {/* <AuthDialog /> */}
-                        <ProfileDropdown />
+                        {
+                            user ?
+                                <ProfileDropdown />
+                                :
+                                <AuthDialog />
+                        }
                     </div>
                     {/* Hamburger Menu Icon (visible on mobile) */}
                     <button
@@ -192,8 +204,12 @@ function NavbarUi({ className }: { className?: string }) {
                     {/* Right Side: Dark/Light Toggle, Sign In/Sign Up, Avatar */}
                     <div className="flex items-center space-x-4 w-full justify-end">
                         <AnimatedThemeToggler />
-                        <AuthDialog />
-                        <ProfileDropdown />
+                        {
+                            user ?
+                                <ProfileDropdown />
+                                :
+                                <AuthDialog />
+                        }
                     </div>
                 </Menu>
             </div>
@@ -248,8 +264,12 @@ function NavbarUi({ className }: { className?: string }) {
                                 Enterprise
                             </HoveredLink>
                         </div> */}
-                        <AuthDialog />
-                        <ProfileDropdown />
+                        {
+                            user ?
+                                <ProfileDropdown />
+                                :
+                                <AuthDialog />
+                        }
                     </div>
                 </div>
             </div>

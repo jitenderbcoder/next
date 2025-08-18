@@ -3,11 +3,7 @@ import LocalStorage from "../../utils/LocalStorage";
 
 interface AuthState {
   token?: string | null;
-  user?: {
-    userId?: string;
-    fullName?: string;
-    profileImage?: string;
-  } | null;
+  user?: any;
 }
 
 const initialState: AuthState = {
@@ -28,11 +24,7 @@ const authSlice = createSlice({
       _state,
       action: PayloadAction<{
         accessToken?: string;
-        user?: {
-          userId?: string;
-          fullName?: string;
-          profileImage?: string;
-        };
+        user?: any;
       }>
     ) => {
       LocalStorage.setInLocalStorage("accessToken", action.payload.accessToken);
