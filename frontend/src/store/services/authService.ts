@@ -60,9 +60,9 @@ export const authApi = GenericApi.injectEndpoints({
       }),
       keepUnusedDataFor: 0,
     }),
-    googleAuth: builder.mutation<any, { code: string }>({
-      query: ({ code }) => ({
-        url: `/auth/google?code=${code}`,
+    googleAuth: builder.mutation<any, { access_token: string }>({
+      query: ({ access_token }) => ({
+        url: `/auth/google?access_token=${access_token}`,
         method: "GET",
       }),
       onQueryStarted: onGoogleAuthStarted,
@@ -71,4 +71,8 @@ export const authApi = GenericApi.injectEndpoints({
   overrideExisting: true,
 });
 
-export const { useSocialLoginMutation, useGetGoogleUserInfoQuery, useGoogleAuthMutation } = authApi;
+export const {
+  useSocialLoginMutation,
+  useGetGoogleUserInfoQuery,
+  useGoogleAuthMutation,
+} = authApi;

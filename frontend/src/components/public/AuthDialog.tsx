@@ -19,12 +19,38 @@ export function AuthDialog() {
   const [googleAuth] = useGoogleAuthMutation();
 
   // const navigate = useNavigate();
+  // const responseGoogle = async (authResult: any) => {
+  //   try {
+  //     // debugger
+  //     if (authResult["code"]) {
+  //       console.log(authResult.code, ":>authResult.code90inn")
+  //       const result = await googleAuth({ code: authResult.code }).unwrap();
+
+  //      const { email, fullName: name, profileImage: image } = result.data.user;
+  //       const token = result.data.token;
+  //       const obj = { email, name, token, image };
+  //       localStorage.setItem('user-info', JSON.stringify(obj));
+  //       // navigate('/dashboard');
+  //     } else {
+  //       console.log(authResult);
+  //       throw new Error(authResult);
+  //     }
+  //   } catch (e) {
+  //     console.log('Error while Google Login...', e);
+  //   }
+  // };
+
+  // const googleLogin = useGoogleLogin({
+  //   onSuccess: responseGoogle,
+  //   onError: responseGoogle,
+  //   flow: "auth-code",
+  // });
   const responseGoogle = async (authResult: any) => {
     try {
-      // debugger
-      if (authResult["code"]) {
-        console.log(authResult.code, ":>authResult.code90inn")
-        const result = await googleAuth({ code: authResult.code });
+      if (authResult.access_token) {
+        console.log(authResult.access_token, ":>access_token");
+        const result = await googleAuth({ access_token: authResult.access_token }).unwrap();
+
         const { email, name, image } = result.data.user;
         const token = result.data.token;
         const obj = { email, name, token, image };
@@ -42,7 +68,7 @@ export function AuthDialog() {
   const googleLogin = useGoogleLogin({
     onSuccess: responseGoogle,
     onError: responseGoogle,
-    flow: "auth-code",
+    scope: "email profile",  // Add scopes for userinfo access
   });
   return (
     <>
@@ -75,7 +101,7 @@ export function AuthDialog() {
             <Button
               variant="outline"
               className="w-full py-6 flex items-center justify-center gap-2"
-              onClick={googleLogin}
+              onClick={() => googleLogin()}
             >
               <Icons.google className="h-5 w-5" />
               <span>Continue with Google</span>
