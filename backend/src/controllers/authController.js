@@ -71,14 +71,6 @@ export const googleAuth = async (req, res, next) => {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    // Debug: Log updated cookie setting
-    console.log("🍪 Setting cookie:", {
-      name: "auth_token",
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax", // This should show 'lax' now
-    });
-
     res.status(200).json({
       success: true,
       message: isNewUser ? "Account created successfully" : "Login successful",

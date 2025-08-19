@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { HoveredLink, Menu, MenuItem, ProductItem } from "../ui/navbar-menu";
 import { cn } from "@/lib/utils";
 import { LogOut, MenuIcon, Moon, Settings, Sun, User, X } from "lucide-react"; // Assuming you're using lucide-react for icons
@@ -26,8 +26,10 @@ function NavbarUi({ className }: { className?: string }) {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const user = useSelector((state: StoreModel) => state.auth.user);
     const { profileData, isLoading } = useProfileData();
+    const userIsAuth = useSelector((state: StoreModel) => state.auth.isAuthenticated);
+    const [isClient, setIsClient] = useState(false); // ✅ Add client-side flag
 
-    console.log(user,profileData, ":>user09jik")
+    console.log(user, profileData, userIsAuth, ":>user09jik")
     const [logout, { isLoading: isLoggingOut, error }] = useLogoutMutation();
 
     const handleLogout = async () => {
@@ -106,6 +108,21 @@ function NavbarUi({ className }: { className?: string }) {
     const toggleMobileMenu = () => {
         setIsMobileMenuOpen(!isMobileMenuOpen);
     };
+    // ✅ Ensure consistent rendering between server and client
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
+
+    // Show consistent loading state during hydration and auth loading
+    if (!isClient || isLoading) {
+        return (
+            <div className={cn("fixed top-10 inset-x-0 max-w-full mx-auto z-50", className)}>
+                <div className="flex items-center justify-center">
+                    <div className="animate-pulse h-8 w-8 bg-gray-300 rounded-full"></div>
+                </div>
+            </div>
+        );
+    }
     return (
         <>
             <div
@@ -130,7 +147,7 @@ function NavbarUi({ className }: { className?: string }) {
                     <div className="flex items-center space-x-4 w-full justify-end">
                         <AnimatedThemeToggler />
                         {
-                            profileData ?
+                            user ?
                                 <ProfileDropdown />
                                 :
                                 <AuthDialog />
@@ -168,8 +185,8 @@ function NavbarUi({ className }: { className?: string }) {
                     <div className="flex items-center gap-10 w-full justify-center">
                         <MenuItem setActive={setActive} active={active} item="Services">
                             <div className="flex flex-col space-y-4 text-sm">
-                                <HoveredLink href="/web-dev">Web Development</HoveredLink>
-                                <HoveredLink href="/interface-design">Interface Design</HoveredLink>
+                                <HoveredLink href="/login">Web Development</HoveredLink>
+                                <HoveredLink href="/register">Interface Design</HoveredLink>
                                 <HoveredLink href="/seo">Search Engine Optimization</HoveredLink>
                                 <HoveredLink href="/branding">Branding</HoveredLink>
                             </div>
@@ -216,7 +233,7 @@ function NavbarUi({ className }: { className?: string }) {
                     <div className="flex items-center space-x-4 w-full justify-end">
                         <AnimatedThemeToggler />
                         {
-                            profileData ?
+                            user ?
                                 <ProfileDropdown />
                                 :
                                 <AuthDialog />
@@ -244,39 +261,8 @@ function NavbarUi({ className }: { className?: string }) {
 
                     {/* Mobile Menu Items */}
                     <div className="flex flex-col space-y-4 mt-4">
-                        {/* <div className="flex flex-col space-y-2">
-                            <span className="text-lg font-semibold text-gray-900 dark:text-white">Services</span>
-                            <HoveredLink href="/web-dev" className="text-sm text-gray-700 dark:text-gray-200">
-                                Web Development
-                            </HoveredLink>
-                            <HoveredLink href="/interface-design" className="text-sm text-gray-700 dark:text-gray-200">
-                                Interface Design
-                            </HoveredLink>
-                            <HoveredLink href="/seo" className="text-sm text-gray-700 dark:text-gray-200">
-                                Search Engine Optimization
-                            </HoveredLink>
-                            <HoveredLink href="/branding" className="text-sm text-gray-700 dark:text-gray-200">
-                                Branding
-                            </HoveredLink>
-                        </div>
-
-                        <div className="flex flex-col space-y-2">
-                            <span className="text-lg font-semibold text-gray-900 dark:text-white">Pricing</span>
-                            <HoveredLink href="/hobby" className="text-sm text-gray-700 dark:text-gray-200">
-                                Hobby
-                            </HoveredLink>
-                            <HoveredLink href="/individual" className="text-sm text-gray-700 dark:text-gray-200">
-                                Individual
-                            </HoveredLink>
-                            <HoveredLink href="/team" className="text-sm text-gray-700 dark:text-gray-200">
-                                Team
-                            </HoveredLink>
-                            <HoveredLink href="/enterprise" className="text-sm text-gray-700 dark:text-gray-200">
-                                Enterprise
-                            </HoveredLink>
-                        </div> */}
                         {
-                            profileData ?
+                            user ?
                                 <ProfileDropdown />
                                 :
                                 <AuthDialog />

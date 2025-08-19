@@ -2,6 +2,7 @@
 import React from "react";
 import { motion } from "motion/react";
 import { Transition } from "framer-motion";
+import Link from "next/link";
 
 const transition: Transition = {
   type: "spring",
@@ -108,13 +109,14 @@ export const ProductItem = ({
   );
 };
 
-export const HoveredLink = ({ children, ...rest }: any) => {
+export const HoveredLink = ({ children, href, ...rest }: any) => {
   return (
-    <a
+    <Link
+      href={href}
       {...rest}
-      className="text-neutral-700 dark:text-neutral-200 hover:text-black "
+      className="text-neutral-700 dark:text-neutral-200 hover:text-black"
     >
       {children}
-    </a>
+    </Link>
   );
 };
