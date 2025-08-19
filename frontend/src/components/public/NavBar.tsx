@@ -11,6 +11,7 @@ import { AuthDialog } from "./AuthDialog";
 import { useSelector } from "react-redux";
 import { StoreModel } from "@/store/store";
 import { useLogoutMutation } from "@/store/services/authService";
+import { useProfileData } from "../AuthProvider";
 
 export default function Navbar() {
     return (
@@ -24,9 +25,18 @@ function NavbarUi({ className }: { className?: string }) {
     const [active, setActive] = useState<string | null>(null);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const user = useSelector((state: StoreModel) => state.auth.user);
-    const [logout, { isLoading: isLoggingOut }] = useLogoutMutation();
+    const { profileData, isLoading } = useProfileData();
 
-    console.log(user, ":>user98uihjb")
+    console.log(user,profileData, ":>user09jik")
+    const [logout, { isLoading: isLoggingOut, error }] = useLogoutMutation();
+
+    const handleLogout = async () => {
+        try {
+            await logout().unwrap();
+        } catch (err) {
+            console.error('Logout failed:', err);
+        }
+    };
     // Dropdown menu component for both desktop and mobile
     const ProfileDropdown = ({ isMobile = false }: { isMobile?: boolean }) => (
         <DropdownMenu>
@@ -78,15 +88,16 @@ function NavbarUi({ className }: { className?: string }) {
                     </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                    <div
-                        // href="/logout"
-                        className="flex items-center space-x-2"
-                        // onClick={isMobile ? toggleMobileMenu : undefined}
-                        onClick={() => logout(user?._id)}
+                    <button
+                        className="flex items-center space-x-2 bg-transparent border-none cursor-pointer"
+                        onClick={handleLogout}
+                        disabled={isLoggingOut}
+                        aria-label="Logout"
                     >
                         <LogOut className="w-4 h-4" />
                         <span>Logout</span>
-                    </div>
+                    </button>
+
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
@@ -119,7 +130,7 @@ function NavbarUi({ className }: { className?: string }) {
                     <div className="flex items-center space-x-4 w-full justify-end">
                         <AnimatedThemeToggler />
                         {
-                            user ?
+                            profileData ?
                                 <ProfileDropdown />
                                 :
                                 <AuthDialog />
@@ -205,7 +216,7 @@ function NavbarUi({ className }: { className?: string }) {
                     <div className="flex items-center space-x-4 w-full justify-end">
                         <AnimatedThemeToggler />
                         {
-                            user ?
+                            profileData ?
                                 <ProfileDropdown />
                                 :
                                 <AuthDialog />
@@ -265,7 +276,7 @@ function NavbarUi({ className }: { className?: string }) {
                             </HoveredLink>
                         </div> */}
                         {
-                            user ?
+                            profileData ?
                                 <ProfileDropdown />
                                 :
                                 <AuthDialog />

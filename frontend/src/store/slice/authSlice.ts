@@ -1,47 +1,36 @@
-import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import LocalStorage from "../../utils/LocalStorage";
+// redux/slice/authSlice.js
+import { createSlice } from '@reduxjs/toolkit';
 
-interface AuthState {
-  token?: string | null;
-  user?: any;
-}
-
-const initialState: AuthState = {
-  token: LocalStorage.getFromLocalStorage("accessToken")
-    ? LocalStorage.getFromLocalStorage("accessToken")
-    : null,
-  user: LocalStorage.getFromLocalStorage("user")
-    ? LocalStorage.getFromLocalStorage("user")
-    : null,
+const initialState = {
+  user: null,
+  isAuthenticated: false,
+  isNewUser: false,
+  // Remove: token, accessToken - no longer needed
 };
 
 const authSlice = createSlice({
-  name: "auth",
+  name: 'auth',
   initialState,
   reducers: {
-    setToken: (state, { payload: token }) => ({ ...state, token: token }),
-    setUser: (
-      _state,
-      action: PayloadAction<{
-        accessToken?: string;
-        user?: any;
-      }>
-    ) => {
-      LocalStorage.setInLocalStorage("accessToken", action.payload.accessToken);
-      LocalStorage.setInLocalStorage("user", action.payload.user);
-      return {
-        token: action.payload.accessToken,
-        user: action.payload.user,
-      };
+    setUser: (state, action) => {
+      state.user = action.payload.user;
+      state.isAuthenticated = true;
+      state.isNewUser = action.payload.isNewUser || false;
     },
+    
     setLogout: (state) => {
-      LocalStorage.clearLocalStorage();
-      state.token = null;
       state.user = null;
+      state.isAuthenticated = false;
+      state.isNewUser = false;
     },
+
+    // Optional: Clear new user flag after welcome message
+    clearNewUserFlag: (state) => {
+      state.isNewUser = false;
+    },
+
   },
 });
 
-export const { setLogout, setUser, setToken } = authSlice.actions;
-
+export const { setUser, setLogout, clearNewUserFlag } = authSlice.actions;
 export default authSlice;

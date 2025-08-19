@@ -14,6 +14,7 @@ type AuthState = {
 
 const baseQuery = fetchBaseQuery({
   baseUrl: Constants.HOST + Constants.API_VERSION,
+  credentials: "include",
   prepareHeaders: (
     headers: Headers,
     api: Pick<

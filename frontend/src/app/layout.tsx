@@ -4,6 +4,7 @@ import "./globals.css";
 import { Providers } from "@/store/provider";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { ThemeProvider } from "@/components/theme-provider";
+import { ProfileProvider } from "@/components/AuthProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,7 +39,9 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <Providers>
-              {children}
+              <ProfileProvider>
+                {children}
+              </ProfileProvider>
             </Providers>
           </ThemeProvider>
         </GoogleOAuthProvider>
