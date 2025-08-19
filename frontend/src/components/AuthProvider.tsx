@@ -5,7 +5,6 @@ import { setLogout, setUser } from '@/store/slice/authSlice';
 import { StoreModel } from '@/store/store';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getCookies } from "cookies-next";
 
 
 const ProfileContext = createContext<any>(null);
