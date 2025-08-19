@@ -1,6 +1,7 @@
 import axios from "axios";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
+import {ApiError} from "../utils/ApiError.js"
 
 /* GET Google Authentication API with access_token. */
 export const googleAuth = async (req, res, next) => {
@@ -9,10 +10,7 @@ export const googleAuth = async (req, res, next) => {
   try {
     // Input validation
     if (!access_token) {
-      return res.status(400).json({
-        success: false,
-        message: "Access token is required",
-      });
+      throw new ApiError(400, "Access token is required")
     }
 
     // Get user data from Google

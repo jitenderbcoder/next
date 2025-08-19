@@ -7,7 +7,6 @@ import cookieParser from "cookie-parser";
 const app = express();
 dotenv.config();
 // Middleware
-app.use(express.json());
 app.use(
   cors({
     origin: "http://localhost:3000",
@@ -16,6 +15,8 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.use(cookieParser());
 
 // Routes
